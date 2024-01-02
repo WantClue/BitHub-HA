@@ -12,13 +12,13 @@ Activate the advanced mode in your user settings
 
 Next step would be to install the Studio Code Server and add the folder `custom_components`
 
-In the sensor.py change the `YOURBITAXEIP` to the ip of your Bitaxe
+In the `configuration.yaml` change the ip_address to the ip of your Bitaxe
 
 in the `configurtaion.yaml` file add the sensor:
 ```linux
 sensor:
   - platform: bithub
-    name: "BitaxeHub"
+    ip_address: "192.168.1.1"
 ```
 It will look like this
 ![bitaxehub](/picture/dashboard.png)
