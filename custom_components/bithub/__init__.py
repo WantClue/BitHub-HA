@@ -1,0 +1,1 @@
+"""Example REST sensor integration."""

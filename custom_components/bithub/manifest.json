@@ -1,0 +1,11 @@
+{
+    "domain": "bithub",
+    "name": "BitaxeHub",
+    "documentation": "https://www.example.com",
+    "dependencies": [],
+    "codeowners": ["@WantClue"],
+    "requirements": ["requests>=2.25.1"],
+    "version": "1.0.0",
+    "config_flow": false
+  }
+  
