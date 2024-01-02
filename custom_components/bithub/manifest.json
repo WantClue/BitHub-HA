@@ -1,7 +1,7 @@
 {
     "domain": "bithub",
     "name": "BitaxeHub",
-    "documentation": "https://www.example.com",
+    "documentation": "https://github.com/WantClue/BitHub-HA",
     "dependencies": [],
     "codeowners": ["@WantClue"],
     "requirements": ["requests>=2.25.1"],
