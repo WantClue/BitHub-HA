@@ -1,17 +1,32 @@
 import requests
 from homeassistant.helpers.entity import Entity
 from homeassistant.const import TEMP_CELSIUS
+import voluptuous as vol
+from homeassistant.components.sensor import PLATFORM_SCHEMA
+import homeassistant.helpers.config_validation as cv
+
+# Configuration schema
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
+    vol.Required('ip_address'): cv.string,
+})
 
 def setup_platform(hass, config, add_entities, discovery_info=None):
+    ip_address = config['ip_address']
     """Set up the sensor platform."""
-    add_entities([ASICModelSensor(), HashRateSensor(),PowerSensor(), TempSensor(), BestDiffSensor()])
-
+    add_entities([
+        ASICModelSensor(ip_address),
+        HashRateSensor(ip_address),
+        PowerSensor(ip_address),
+        TempSensor(ip_address),
+        BestDiffSensor(ip_address)
+    ])
 class PowerSensor(Entity):
     """Watt representation"""
 
-    def __init__(self):
+    def __init__(self, ip_address):
         """Initialize the Watt sensor."""
         self._state = None
+        self._ip_address = ip_address
 
     @property
     def name(self):
@@ -26,7 +41,7 @@ class PowerSensor(Entity):
     def update(self):
         """Fetch new state data for the sensor."""
         try:
-            response = requests.get('http://YOURBITAXEIP/api/system/info', timeout=10)
+            response = requests.get(f'http://{self._ip_address}/api/system/info', timeout=10)
             response.raise_for_status()
             data = response.json()
             self._state = data.get('power', 'Unknown')
@@ -36,9 +51,10 @@ class PowerSensor(Entity):
 class BestDiffSensor(Entity):
     """Diff representation"""
 
-    def __init__(self):
+    def __init__(self, ip_address):
         """Initialize the Diff sensor."""
         self._state = None
+        self._ip_address = ip_address
 
     @property
     def name(self):
@@ -53,7 +69,7 @@ class BestDiffSensor(Entity):
     def update(self):
         """Fetch new state data for the sensor."""
         try:
-            response = requests.get('http://YOURBITAXEIP/api/system/info', timeout=10)
+            response = requests.get(f'http://{self._ip_address}/api/system/info', timeout=10)
             response.raise_for_status()
             data = response.json()
             self._state = data.get('bestDiff', 'Unknown')
@@ -63,10 +79,11 @@ class BestDiffSensor(Entity):
 class TempSensor(Entity):
     """TempSensor representation"""
 
-    def __init__(self):
+    def __init__(self, ip_address):
         """Initialize the Temp sensor."""
         self._state = None
         self._unit_of_measurement = TEMP_CELSIUS
+        self._ip_address = ip_address
 
     @property
     def name(self):
@@ -81,7 +98,7 @@ class TempSensor(Entity):
     def update(self):
         """Fetch new state data for the sensor."""
         try:
-            response = requests.get('http://YOURBITAXEIP/api/system/info', timeout=10)
+            response = requests.get(f'http://{self._ip_address}/api/system/info', timeout=10)
             response.raise_for_status()
             data = response.json()
             self._state = data.get('temp', 'Unknown')
@@ -91,9 +108,11 @@ class TempSensor(Entity):
 class ASICModelSensor(Entity):
     """Representation of a Sensor for the ASIC Model."""
 
-    def __init__(self):
+    def __init__(self, ip_address):
         """Initialize the ASIC Model sensor."""
         self._state = None
+        self._ip_address = ip_address
+
 
     @property
     def name(self):
@@ -108,7 +127,7 @@ class ASICModelSensor(Entity):
     def update(self):
         """Fetch new state data for the sensor."""
         try:
-            response = requests.get('http://YOURBITAXEIP/api/system/info', timeout=10)
+            response = requests.get(f'http://{self._ip_address}/api/system/info', timeout=10)
             response.raise_for_status()
             data = response.json()
             self._state = data.get('ASICModel', 'Unknown')
@@ -118,9 +137,10 @@ class ASICModelSensor(Entity):
 class HashRateSensor(Entity):
     """Representation of a Sensor for the Hash Rate."""
 
-    def __init__(self):
+    def __init__(self, ip_address):
         """Initialize the Hash Rate sensor."""
         self._state = None
+        self._ip_address = ip_address
 
     @property
     def name(self):
@@ -135,7 +155,7 @@ class HashRateSensor(Entity):
     def update(self):
         """Fetch new state data for the sensor."""
         try:
-            response = requests.get('http://YOURBITAXEIP/api/system/info', timeout=10)
+            response = requests.get(f'http://{self._ip_address}/api/system/info', timeout=10)
             response.raise_for_status()
             data = response.json()
             self._state = data.get('hashRate', 'Unknown')
